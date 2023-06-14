@@ -23,6 +23,8 @@ return new class extends Migration
             $table->enum('gender', ['boy', 'girl']);
             $table->boolean('accept');
             $table->boolean('remember_me')->nullable()->default(0);
+            $table->string('balance')->nullable();
+            $table->foreignId('game_id')->nullable()->constrained('games')->nullOnDelete();
             $table->rememberToken();
             $table->timestamps();
         });

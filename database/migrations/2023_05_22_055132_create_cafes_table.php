@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('cafes', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('address');
+            $table->string('city');
+            $table->string('price');
+            $table->string('image');
+            $table->string('space');
+            // des
+            $table->enum('status', ['open', 'close'])->default('open');
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+
+            // $table->integer('count_of_players');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('cafes');
+    }
+};

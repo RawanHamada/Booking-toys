@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\AccessToken;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -97,7 +98,9 @@ class AuthController extends Controller
         //     Hash::check($request->password, $user->password)
         // ], $remember_me))
         if ($user &&
-         Hash::check($request->password, $user->password) && $remember_me) {
+         Hash::check($request->password, $user->password)
+        //  && $remember_me
+         ) {
 
             // $user = auth()->user();
             //  if ( $user) {
@@ -134,27 +137,26 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    // public function userProfile(Request $request) {
-    //     $token = $request->header('Authorization');
+    public function userProfile(Request $request) {
+        $token = $request->header('Authorization');
 
-    //     $arr = explode(' ',$token);
-
-
-    //     $user_id =$request->user()->id;
-
-    //     $mytoken =  AccessToken::where('tokenable_id', '=',$user_id)->get();
+        $arr = explode(' ',$token);
 
 
-    //     return response()->json(
-    //         [
-    //             'message_en' => 'User Profile',
-    //             'message_ar' => 'الملف الشخصي',
+        $user_id =$request->user()->id;
 
-    //             'code' => 200,
-    //             'status' => true,
-    //             'data' => $request->user()
-    //         ], 201);
-    // }
+        $mytoken =  AccessToken::where('tokenable_id', '=',$user_id)->get();
+
+
+        return response()->json(
+            [
+                'message_en' => 'User Profile',
+                'message_ar' => 'الملف الشخصي',
+                'code' => 200,
+                'status' => true,
+                'data' => $request->user()
+            ], 201);
+    }
 
     // update user-profile
     // public function update(Request $request) {

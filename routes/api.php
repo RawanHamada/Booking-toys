@@ -1,6 +1,13 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CafeController;
+use App\Http\Controllers\Api\CodeCheckController;
+use App\Http\Controllers\Api\ForgotPasswordController;
+use App\Http\Controllers\Api\GamesController;
+use App\Http\Controllers\Api\NewPasswordController;
+// use App\Http\Controllers\Api\ForgotPasswordController;
+use App\Http\Controllers\Api\ResetPasswordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,18 +35,33 @@ Route::group([
                 ->middleware('guest:sanctum');
 
     Route::post('/register', [AuthController::class, 'register']);
-    Route::delete('/access-tokens/{token?}', [AccessTokensController::class, 'destroy'])
+    Route::delete('/access-tokens/{token?}', [AuthController::class, 'destroy'])
                  ->middleware('auth:sanctum');
+
+    // Route::post('/profile/show', [AuthController::class, 'userProfile'])
+    //             ->middleware('auth:sanctum');
 
     Route::post('/profile/update', [AuthController::class, 'update'])
                 ->middleware('auth:sanctum');
 
-    Route::delete('/delete-account', [AccessTokensController::class, 'deleteAccount'])
+    Route::delete('/delete-account', [AuthController::class, 'deleteAccount'])
                  ->middleware('auth:sanctum');
 
-    Route::post('/logout', [AccessTokensController::class, 'logout'])
+    Route::post('/logout', [AuthController::class, 'logout'])
             ->middleware('auth:sanctum');
 
+            Route::post('password/email',  ForgotPasswordController::class);
+            Route::post('password/code/check', CodeCheckController::class);
+            Route::post('password/reset', ResetPasswordController::class);
 
+    Route::post('forgot-password', [NewPasswordController::class, 'forgotPassword']);
+    Route::post('reset-password', [NewPasswordController::class, 'resetPassword']);
 
 });
+
+    Route::get('cafes', [CafeController::class, 'index']);
+    Route::get('search/{name}', [CafeController::class, 'search']);
+
+    Route::get('games', [GamesController::class, 'index']);
+
+

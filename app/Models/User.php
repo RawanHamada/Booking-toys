@@ -3,10 +3,14 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Notifications\MailResetPasswordToken;
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -26,7 +30,8 @@ class User extends Authenticatable
         'date_of_birth',
         'gender',
         'accept',
-
+        'status',
+        // 'player_id'
     ];
 
     /**
@@ -52,6 +57,22 @@ class User extends Authenticatable
 
     ];
 
+    // Relation With Player
+    public function player(){
+        return $this->belongsTo(Player::class, 'player_id')->withDefault();
+    }
+
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->code = Str::random(4);
+        $this->save();
+
+        $this->notify(new MailResetPasswordToken($token, $this->code));
+        // $url = 'https://spa.test/reset-password?token=' . $token;
+
+        // $this->notify(new ResetPasswordNotification($url));
+    }
     // Accessor Methods
     public function getImageAttribute(){
         if(!$this->avatar) {

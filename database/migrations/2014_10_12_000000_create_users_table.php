@@ -16,14 +16,11 @@ return new class extends Migration
             $table->string('avatar')->nullable();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->date('date_of_birth');
             $table->string('password');
             $table->string('confirm_password');
-            $table->enum('gender', ['boy', 'girl']);
+            $table->string('gender');
             $table->boolean('accept');
-            $table->boolean('remember_me')->nullable()->default(0);
-            $table->string('balance')->nullable();
+            $table->string('code', 6)->nullable();
             $table->foreignId('game_id')->nullable()->constrained('games')->nullOnDelete();
             $table->rememberToken();
             $table->timestamps();

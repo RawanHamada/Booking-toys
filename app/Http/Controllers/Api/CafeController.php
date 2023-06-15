@@ -14,7 +14,7 @@ class CafeController extends Controller
     public function index()
     {
 
-        $cafes = Cafe::all();
+        $cafes = Cafe::paginate(10);
         if($cafes->count() > 0) {
 
         return $this->returnSuccessMessage("كل الكافيهات",'All Cafes',200,true,$cafes);

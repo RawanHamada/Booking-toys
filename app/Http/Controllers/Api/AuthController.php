@@ -25,12 +25,11 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|between:2,100',
             'avatar' => 'nullable|image|mimes:jpg,png,bmp',
-            'date_of_birth' => 'required|date',
             'email' => 'required|string|email|max:100|unique:users',
             // 'password' => 'required|string|min:6|confirmed',
             'password' => 'required|same:confirm_password',
             'confirm_password' => 'required_with:password',
-            'gender' => 'required|in:boy,girl',
+            'gender' => 'required|between:3,4',
             'accept' => 'required|in:1'
             // |same:password|min:6
             // 'fcm_token' => 'nullable'
@@ -91,7 +90,6 @@ class AuthController extends Controller
         //  $user = Auth::guard('sanctum')->user();
 
         $user = User::where('email', $request->email)->first();
-        $remember_me = $request->has('remember_me') ? true : false;
         // if(auth('sanctum')->attempt([$user, Hash::check($request->password, $user->password)],$remember_me))
         // if (Auth::guard('sanctum')->attempt([
         //     $user,
@@ -112,6 +110,7 @@ class AuthController extends Controller
             $device_name = $request->post('device_name', $request->userAgent());
             $token = $user->createToken($device_name);
             $user['token'] = $token->plainTextToken;
+            $user['avatar'] = $user->avatar_url;
 
             return Response::json([
                 'message_en' => "login",
@@ -159,55 +158,55 @@ class AuthController extends Controller
     }
 
     // update user-profile
-    // public function update(Request $request) {
-    //     $validator = Validator::make($request->all(), [
-    //         'name' => 'required|string|between:2,100',
-    //         'phone_number' => 'required|numeric|digits:10',
-    //         'email' => 'required|string|email|max:100',
-    //         'avatar' => 'nullable|image|mimes:jpg,png,bmp',
-    //         'fcm_token' => 'nullable'
-    //     ]);
-    //     if($validator->fails()){
-    //         return response()->json([
-    //             'message'=> 'Validations fails',
-    //             'errors'=>$validator->errors()
-    //         ],422);
-    //     }
-    //     $user = $request->user();
+    public function update(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'name' => 'nullable|string|between:2,100',
+            'email' => 'nullable|string|email|max:100',
+            'avatar' => 'nullable|image|mimes:jpg,png,bmp',
+            // 'gender' => 'nullable|string|between:3,4',
+            // 'fcm_token' => 'nullable'
+        ]);
+        if($validator->fails()){
+            return response()->json([
+                'message'=> 'Validations fails',
+                'errors'=>$validator->errors()
+            ],422);
+        }
+        $user = $request->user();
 
-    //     if($request->hasFile('avatar')){
-    //         if($user->avatar){
-    //             $old_path = public_path().
-    //             'assets/images/auth/'.$user->avatar;
-    //             if(File::exists($old_path)){
-    //                 File::delete($old_path);
-    //             }
-    //         }
-    //         $image_name = 'profile-image-'.rand().time().'.'.$request->avatar->extension();
-    //         $request->avatar->move(public_path('/assets/images/auth'),$image_name);
-    //     }else{
-    //         $image_name=$user->avatar;
-    //     }
-
-
-    //     $user->update([
-    //         'name'=>$request->name,
-    //         'phone_number'=>$request->phone_number,
-    //         'email'=>$request->email,
-    //         'avatar'=>$image_name
-    //     ]);
-
-    //     return response()->json([
-    //         'message_en'=>'Profile successfully updated',
-    //         'message_ar'=>'تم تحديث الملف الشخصي بنجاح',
-
-    //         'code' => 200,
-    //         'status' => true,
-    //         'data'=>$request->user()
-    //     ],200);
+        if($request->hasFile('avatar')){
+            if($user->avatar){
+                $old_path = public_path().
+                'assets/'.$user->avatar;
+                if(File::exists($old_path)){
+                    File::delete($old_path);
+                }
+            }
+            $image_name = 'profile-image-'.rand().time().'.'.$request->avatar->extension();
+            $request->avatar->move(public_path('/assets'),$image_name);
+        }else{
+            $image_name=$user->avatar_url;
+        }
 
 
-    // }
+        $user->update([
+            'name'=>$request->name,
+            'phone_number'=>$request->phone_number,
+            'email'=>$request->email,
+            'avatar'=>$image_name
+        ]);
+
+        return response()->json([
+            'message_en'=>'Profile successfully updated',
+            'message_ar'=>'تم تحديث الملف الشخصي بنجاح',
+
+            'code' => 200,
+            'status' => true,
+            'data'=>$request->user()
+        ],200);
+
+
+    }
 
 
     // public function getOrdersCountAndMembership(Request $request)

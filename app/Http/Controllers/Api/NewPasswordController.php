@@ -62,7 +62,7 @@ class NewPasswordController extends Controller
 
         // Check if the verification code matches the stored code for the email
         $codeExists = DB::table('users')
-            // ->where('email', $request->email)
+            ->where('email', $request->email)
             ->where('code', $request->code)
             ->exists();
 

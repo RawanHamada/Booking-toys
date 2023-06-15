@@ -25,14 +25,17 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'confirm_password',
         'avatar',
+        'confirm_password',
         'date_of_birth',
         'gender',
         'accept',
         'status',
         // 'player_id'
     ];
+
+    // protected $appends = ['avatar_url'];
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -51,7 +54,7 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        // 'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'confirm_password' => 'hashed',
 
@@ -65,7 +68,7 @@ class User extends Authenticatable
 
     public function sendPasswordResetNotification($token)
     {
-        $this->code = Str::random(4);
+        $this->code = random_int(100000, 999999);
         $this->save();
 
         $this->notify(new MailResetPasswordToken($token, $this->code));
@@ -74,11 +77,13 @@ class User extends Authenticatable
         // $this->notify(new ResetPasswordNotification($url));
     }
     // Accessor Methods
-    public function getImageAttribute(){
-        if(!$this->avatar) {
-            return asset('assets/avatar.png');
-        }
-        return asset('uploads/avatar/' . $this->avatar);
+    public function getAvatarUrlAttribute(){
+        return asset('assets/avatar.png');
+
+        // if(!$this->avatar) {
+        //     return asset('assets/avatar.png');
+        // }
+        // return asset('uploads/avatar/' . $this->avatar);
 
     }
 }

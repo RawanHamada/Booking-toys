@@ -12,17 +12,17 @@ class Reservation extends Model
     protected $fillable = [
         'cafe_id',
         'user_id',
-        'game_id',
-        'start_date',
-        'end_date',
-        'per_day',
-        'total'
+        // 'game_id',
+        'num__of_seats',
+        'date',
+        'time',
+        'price',
     ];
 
     // Relation With game
-    public function game(){
-        return $this->belongsTo(Game::class, 'game_id')->withDefault();
-    }
+    // public function game(){
+    //     return $this->belongsTo(Game::class, 'game_id')->withDefault();
+    // }
 
     // Relation With user
     public function user(){
@@ -32,5 +32,4 @@ class Reservation extends Model
     public function cafe(){
         return $this->belongsTo(Cafe::class, 'cafe_id')->withDefault();
     }
-
 }

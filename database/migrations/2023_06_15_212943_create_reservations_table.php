@@ -13,8 +13,12 @@ return new class extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
+            $table->integer('num__of_seats');
+            $table->string('date');
+            $table->string('time');
+            // $table->string('price');
             // owner or admin or hakam
-            
+
             // $table->foreignId('owner_id')
             // ->nullable()
             // ->constrained('owners')
@@ -30,12 +34,8 @@ return new class extends Migration
             ->constrained('users')
             ->nullOnDelete();
 
-
-            $table->string('start_date');
-            $table->string('end_date');
-            $table->string('per_day');
-            $table->string('total');
             $table->timestamps();
+
         });
     }
 

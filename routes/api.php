@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\CodeCheckController;
 use App\Http\Controllers\Api\ForgotPasswordController;
 use App\Http\Controllers\Api\GamesController;
 use App\Http\Controllers\Api\NewPasswordController;
+use App\Http\Controllers\Api\ReservationController;
 // use App\Http\Controllers\Api\ForgotPasswordController;
 use App\Http\Controllers\Api\ResetPasswordController;
 use Illuminate\Http\Request;
@@ -61,6 +62,8 @@ Route::group([
 
     Route::get('cafes', [CafeController::class, 'index']);
     Route::get('search/{name}', [CafeController::class, 'search']);
+    Route::post('reservations', [ReservationController::class, 'create']);
+
 
     Route::get('games', [GamesController::class, 'index']);
 

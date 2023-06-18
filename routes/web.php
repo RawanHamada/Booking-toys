@@ -29,3 +29,35 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+//Route::get('/', function () {
+//    return url('assets/avatar.png');
+//});
+Route::get('clear',function (){
+    \Illuminate\Support\Facades\Artisan::call('config:clear');
+    \Illuminate\Support\Facades\Artisan::call('config:cache');
+    \Illuminate\Support\Facades\Artisan::call('route:cache');
+    \Illuminate\Support\Facades\Artisan::call('route:clear');
+    dd('test');
+});
+
+
+Route::get('migrate',function (){
+    \Illuminate\Support\Facades\Artisan::call('migrate');
+    dd('test');
+});
+
+Route::get('seed',function (){
+    \Illuminate\Support\Facades\Artisan::call('db:seed');
+    dd('test');
+});
+
+
+Route::get('migrate/rollback',function (){
+    \Illuminate\Support\Facades\Artisan::call('migrate:rollback');
+    dd('test');
+});
+
+Route::get('storage/link',function (){
+    \Illuminate\Support\Facades\Artisan::call('storage:link');
+    dd('test');
+});
